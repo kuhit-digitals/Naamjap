@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naam Jap ~ Harshit</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #8b0000;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+        .jap-container {
+            min-height: 150px;
+            padding: 10px;
+            border: 2px solid #8b0000;
+            background: white;
+            margin-bottom: 10px;
+            font-size: 18px;
+            transition: transform 1s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        .fade-out {
+            transform: rotateY(180deg);
+            opacity: 0;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #ff9800;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Naam Jap Logo" class="logo">
+        <h1 id="chant-title">राम नाम जप</h1>
+        <div class="jap-container" id="chant-display"></div>
+        <p>Chants on this page: <span id="page-chant-count">0</span></p>
+        <button onclick="chant()">Click to Chant</button>
+        <p>Total Chants: <span id="chant-count">0</span></p>
+        <button id="play-pause">Play Chant</button>
+        <br>
+        <button onclick="switchChant('ram')">राम नाम जप</button>
+        <button onclick="switchChant('radhe')">राधे नाम जप</button>
+        <button onclick="switchChant('ganesh')">श्री गणेशाय नमः</button>
+    </div>
+    <footer>Made with ❤️ by Harshit</footer>
+    <script>
+        let chantCount = 0;
+        let totalChants = 0;
+        let pageChants = 0;
+        let currentChant = 'ram';
+        const chantDisplay = document.getElementById("chant-display");
+        const chantCountSpan = document.getElementById("chant-count");
+        const pageChantCountSpan = document.getElementById("page-chant-count");
+        const chantTitle = document.getElementById("chant-title");
+        let chantAudio = new Audio();
+        let isPlaying = false;
+
+        function chant() {
+            chantCount++;
+            totalChants++;
+            pageChants++;
+            chantCountSpan.textContent = totalChants;
+            pageChantCountSpan.textContent = pageChants;
+            let chantText = currentChant === 'ram' ? "राम " : currentChant === 'radhe' ? "राधे " : "श्री गणेशाय नमः ";
+            chantDisplay.innerHTML += chantText;
+            if (chantCount % 108 === 0) {
+                setTimeout(turnPage, 500);
+            }
+        }
+
+        function turnPage() {
+            chantDisplay.classList.add("fade-out");
+            setTimeout(() => {
+                chantDisplay.innerHTML = "";
+                pageChants = 0;
+                pageChantCountSpan.textContent = pageChants;
+                chantDisplay.classList.remove("fade-out");
+            }, 1000);
+        }
+
+        function switchChant(chant) {
+            currentChant = chant;
+            chantCount = 0;
+            pageChants = 0;
+            chantDisplay.innerHTML = "";
+            chantAudio.pause();
+            chantAudio.currentTime = 0;
+            chantAudio.src = chant === 'ram' ? "data:audio/mpeg;base64,SUQzBAAAAAABClRQRTEAAAASAAADU3Bpcml0dWFsIFJoeXRobQBUSVQyAAAAQgAAA1JhbSBSYW0gTWFudHJhIDEwOCBUaW1lcyBpbiAxIE1pbnV0ZSB8IFJhcGlkIENoYW50aW5nIE1lZGl0YXRpb24AVFNTRQAAAA4AAANMYXZmNjAuMy4xMDAAAAAAAAAAAAAAAP/75EQAAAYAX8mNPeAGwQwJZ6e8AB19f0i5rAADp60pZzOAAACUDJKny3k7Lm0l8CRknOwWwyDvCPixnYAJwDsTNmJQEcByDgbRbCWOn9j8HoJY9JwZDac5pqOdgNAhaFtRyKBrOdVk8AzhhpdSMjWW8y14esl8ZWOCnLedbcTsy4ysZIKvZ5EPUe9QznLedcI0zrnplTnOo4RzquRkmYznUbYTsubnAiZY2eRD1fH/hv48BD1HPSJq+4CvV8e0CJr/FHjx48eU9Hjx48iU+L3v8UpSn+KU1///Sjx5S6seER/4" : chant === 'radhe' ? "data:audio/mpeg;base64,SUQzBAAAAAABEVRQRTEAAAARAAADS2FseWFuaSBDaGF1aGFuAFRJVDIAAABKAAADUmFkaGEgTmFhbSBKYWFwIHwgU2hyZWUgUmFkaGUgTmFhbSBEaHVuIHwgS2FseWFuaSBDaGF1aGFuIHwgUmFkaGEgTWFudHJhAFRTU0UAAAAOAAADTGF2ZjYwLjMuMTAwAAAAAAAAAAAAAAD/++REAAMGF3g6weZh8sMux2k8yV5aNeT2DBWAAxk8nwWDJBAAFAgAAQD3MtXq9D0PV5MgAEIIREGBaYOA075acQeT3uDj284riWf2WOWWLFhgebOuNvtr81fehIEhztvlG18CzX/Ycm7Zmv+lOxYYKJYc2bsRXYMFnT1Kb6yJfH7HY4dxrKL152Sye+2Zvtx9hweLKU+mLHNO4zgzP0h453sa42+sZM15mrX2ODySoTJYM2hIMFnMCAIh/8sOF8EwPqj9hxYsWHAkHi8lgTLZcEiLHLr2hIPOvnEg" : "data:audio/mpeg;base64,SUQzBAAAAAAAf1RQRTEAAAAZAAADRGFpbHkgSmFwIC0gMTA4IG1hbnRyYXMAVElUMgAAADAAAANPbSBHYW5hZGh5YWtzaGF5IE5hbWFoIDEwOCB0aW1lcyBHYW5lc2ggTWFudHJhAFRTU0UAAAAOAAADTGF2ZjYwLjMuMTAwAAAAAAAAAAAAAAD/++RkAA/wAABpAAAACAAADSAAAAEFsBoAD3vCYNIDwAHveEw45mwzyJNZPEDVg0fnPzmLkPNvsSo5irgjWiaxOM8uE0bQFjVMDMNrFZUzSGfDbfMkOiCAw29/hTyNVMP6jd4zDobTnFd5MvFMA2eCFDNWHlNckXs2omlDIpdnNQM6I13hwExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+            chantTitle.innerText = chant === 'ram' ? "राम नाम जप" : chant === 'radhe' ? "राधे नाम जप" : "श्री गणेशाय नमः";
+        }
+
+        document.getElementById("play-pause").addEventListener("click", function() {
+            if (isPlaying) {
+                chantAudio.pause();
+                this.innerText = "Play Chant";
+            } else {
+                chantAudio.play();
+                this.innerText = "Stop Chant";
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+</body>
+</html>
+
